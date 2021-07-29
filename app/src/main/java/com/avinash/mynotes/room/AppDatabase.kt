@@ -3,7 +3,7 @@ package com.avinash.mynotes.room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [Note::class], version = 1, exportSchema = true)
+@Database(entities = [Note::class, Content::class], version = 1, exportSchema = true)
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun getNotesDao() : NotesDao
+    abstract fun getNotesDao(): NotesDao
 }

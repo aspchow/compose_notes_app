@@ -16,6 +16,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,6 +28,7 @@ import androidx.navigation.NavHostController
 import com.avinash.mynotes.R
 import com.avinash.mynotes.room.Note
 import com.avinash.mynotes.ui.NavRouting
+import com.avinash.mynotes.ui.setValue
 import com.avinash.mynotes.ui.theme.*
 
 @ExperimentalAnimationApi
@@ -54,8 +56,10 @@ fun NotesListingScreen(
 
 
                 LazyColumn(modifier = Modifier.fillMaxSize(), scrollState) {
-                    items(notes) {
-                        Note(it)
+                    items(notes) { note ->
+                        Note(note = note, onClick = {
+                            navController.navigate("notes_detail/$it")
+                        })
                         Spacer(modifier = Modifier.height(8.dp))
                     }
                 }
@@ -69,13 +73,14 @@ fun NotesListingScreen(
                     .padding(8.dp)
                     .size(fabSize),
                 onClick = {
-                    navController.navigate(NavRouting.EDIT_NOTES)
+                    navController.navigate(NavRouting.EDIT_NOTES.route)
                 },
                 backgroundColor = MaterialTheme.colors.FabBackGround,
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.add_icon),
-                    contentDescription = null
+                    contentDescription = null,
+                    tint = Color.White
                 )
             }
         }
@@ -148,12 +153,18 @@ fun NotesHeaderAndSearch(searchText: String, onSearchChange: (String) -> Unit) {
 
 @Preview
 @Composable
-fun Note(note: Note = Note(1, "Avinash Munnangi", "Content", "20-Feb", 0)) {
+fun Note(
+    note: Note = Note(1, "Avinash Munnangi", "20-Feb", 0),
+    onClick: (Int) -> Unit = {}
+) {
 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(15)),
+            .clip(RoundedCornerShape(15))
+            .clickable {
+                onClick(note.id)
+            },
         elevation = 30.dp
     ) {
         Column(

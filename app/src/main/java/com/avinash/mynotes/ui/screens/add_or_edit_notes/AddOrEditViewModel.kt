@@ -1,13 +1,15 @@
-package com.avinash.mynotes.ui.screens.add_or_edit
+package com.avinash.mynotes.ui.screens.add_or_edit_notes
 
-import androidx.compose.ui.graphics.Color
+import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.avinash.mynotes.room.Content
 import com.avinash.mynotes.room.Note
 import com.avinash.mynotes.room.NotesDao
-import com.avinash.mynotes.ui.theme.Yellow
+import com.avinash.mynotes.ui.UIUtil
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -18,7 +20,7 @@ class AddOrEditViewModel @Inject constructor(
 ) : ViewModel() {
     val title = MutableStateFlow("")
 
-    val content = MutableStateFlow("")
+    val contents = mutableStateListOf(Content(1, UIUtil.CONTENT_TYPE_TODO, "MY TEST ${UIUtil.TO_DO_SPLITER}true", 1))
 
     val color = MutableStateFlow(0)
 
@@ -26,8 +28,13 @@ class AddOrEditViewModel @Inject constructor(
         this.title.value = title
     }
 
-    fun onContentChange(content: String) {
-        this.content.value = content
+    fun addContent(content: Content) {
+        contents.add(content)
+    }
+
+
+    fun onContentChange(data: String, index: Int) {
+        contents[index].data = data
     }
 
     fun onColorChange(color: Int) {
